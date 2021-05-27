@@ -21,20 +21,25 @@
         <div class="jumbotron">
             <h1>Product List</h1>
         </div>
+        <?php
+            if(isset($_GET['msg']) && $_GET['msg'] != null){
+                echo "<div class='bg-success' style='padding:20px;'>{$_GET['msg']}</div>";
+            } 
+        ?>
         <a href="create.php" class="btn btn-info" style="margin:20px; ">Add new product</a>
         <div class="container-fluid">
         <?php if($result != null){ ?>
-            <table class="table table-striped">
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Actions</th>
+            <table class="table table-striped table-bordered">
+                <th class="text-center">Name</th>
+                <th class="text-center">Description</th>
+                <th class="text-center">Price</th>
+                <th class="text-center">Actions</th>
                 <?php
                    foreach($result as $row){
-                        echo "<tr><td>{$row['name']}</td>";
-                        echo "<td>{$row['description']}</td>";
-                        echo "<td>{$row['price']}</td>";
-                        echo "<td>
+                        echo "<tr><td class='text-center'>{$row['name']}</td>";
+                        echo "<td class='text-center'>{$row['description']}</td>";
+                        echo "<td class='text-center'>{$row['price']}</td>";
+                        echo "<td class='text-center'>
                             <a href='show.php?id={$row['id']}' class='btn btn-primary'>Show</a>
                             <a href='edit.php?id={$row['id']}' class='btn btn-success'>Edit</a>
                             <a onclick='delete_product({$row['id']})' class='btn btn-danger'>Delete</a>
