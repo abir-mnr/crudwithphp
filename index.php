@@ -12,10 +12,18 @@
 
 <body>
     <?php
-        $query = 'SELECT * FROM products order by id desc';
-        $stmt = $con->prepare($query);
-        $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if(isset($_POST['search']) && $_POST['search']!=null){
+            $query = "SELECT * FROM products where name LIKE CONCAT('%',:search,'%') order by id desc";
+            $stmt = $con->prepare($query);
+            $stmt->bindParam(':search',$_POST['search'],PDO::PARAM_STR);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }else{
+            $query = 'SELECT * FROM products order by id desc';
+            $stmt = $con->prepare($query);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
     ?>
     <div class="container">
         <div class="jumbotron">
@@ -28,6 +36,12 @@
         ?>
         <a href="create.php" class="btn btn-info" style="margin:20px; ">Add new product</a>
         <div class="container-fluid">
+        <form style="padding-bottom:60px" action="index.php" method="post">
+            <div class="form-group">
+                <input style="width:30%;float:left" type="search" value="<?php echo isset($_POST['search']) ? $_POST['search'] : ''?>" name="search" class="form-control" placeholder="Search"/>
+                <button style="float:left" type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
         <?php if($result != null){ ?>
             <table class="table table-striped table-bordered">
                 <th class="text-center">Name</th>
@@ -42,7 +56,7 @@
                         echo "<td class='text-center'>
                             <a href='show.php?id={$row['id']}' class='btn btn-primary'>Show</a>
                             <a href='edit.php?id={$row['id']}' class='btn btn-success'>Edit</a>
-                            <a onclick='delete_product({$row['id']})' class='btn btn-danger'>Delete</a>
+                            <a href='delete.php?id={$row['id']}' class='btn btn-danger'>Delete</a>
                         </td></tr>";
                     }
                 ?>
